@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  traefik:
+    image: "traefik:v2.0.0"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+   
+  whoami:
+    image: "containous/whoami"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=HostRegexp(`whoami.{domain:[a-z.0-9-]+}`)"
